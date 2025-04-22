@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import { useRouter } from 'expo-router';
 
 const habits = [
   { id: '1', title: 'Drink More Water' },
@@ -9,8 +10,12 @@ const habits = [
 ];
 
 export default function HomeScreen() {
-  const handlePress = (habit) => {
-    console.log('Selected:', habit.title);
+    const router = useRouter();
+    const handlePress = (habit) => {
+        router.push({
+            pathname: '/habits',
+            params: { title: habit.title },
+          });
   };
 
   return (
