@@ -7,7 +7,7 @@ import { storage } from '../../firebase';
 import { getAuth } from 'firebase/auth';
 
 
-/*
+
 const habitDetails = {
     'Drink More Water': [
       'Start your day with a glass of water',
@@ -29,61 +29,43 @@ const habitDetails = {
       'Avoid screens 1 hour before sleep',
       'Create a calming nighttime routine',
     ],
-  }; */
+  }; 
 
 export default function HabitScreen() {
-  /*const { title } = useLocalSearchParams();
-  const steps = habitDetails[title] || ['No steps found for this habit']; */
-  const [images, setImages] = useState([]);
-  const user = getAuth().currentUser;
+  const { title } = useLocalSearchParams();
+  const steps = habitDetails[title] || ['No steps found for this habit']; 
+  const [goals, setGoals] = useState([]);
 
-  useEffect(() => {
-    fetchImages();
-  }, []);
-
-  const fetchImages = async () => {
-    if (!user) return;
-    const listRef = ref(storage, `gallery/${user.uid}/`);
-    const result = await listAll(listRef);
-    const urls = await Promise.all(result.items.map((item) => getDownloadURL(item)));
-    setImages(urls);
+  const addGoal = () => {
+    // For now, we'll just add a dummy goal. You can connect this to a selection screen later.
+    const newGoal = {
+      id: Date.now().toString(),
+      title: `Goal ${goals.length + 1}`,
+    };
+    setGoals([...goals, newGoal]);
   };
 
-  const uploadImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
-      allowsEditing: true,
-      quality: 1,
-    });
-
-    if (!result.canceled) {
-      const response = await fetch(result.assets[0].uri);
-      const blob = await response.blob();
-
-      const filename = `gallery/${user.uid}/${Date.now()}.jpg`;
-      const imageRef = ref(storage, filename);
-      await uploadBytes(imageRef, blob);
-      fetchImages();
-    }
-  };
 
   return (
     <View style={styles.container}>
-      {/*<Text style={styles.title}>{title}</Text>
+      <Text style={styles.title}>My Goals</Text>
       <Text style={styles.subtitle}>Steps to get started:</Text>
-      {steps.map((step, index) => (
-        <Text key={index}>✅ {step}</Text>
-      ))} */}
-      <Text style={styles.title}>My Goal Gallery</Text>
-      <Button title="Add Photo" onPress={uploadImage} />
-      <FlatList
-        data={images}
-        numColumns={2}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <Image source={{ uri: item }} style={styles.image} />
-        )}
-      />
+      {goals.length === 0 ? (
+        <Text style={styles.noGoals}>No goals picked yet.</Text>
+      ) : (
+        <FlatList
+          data={goals}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <View style={styles.goalCard}>
+              <Text style={styles.goalText}>{item.title}</Text>
+            </View>
+          )}
+        />
+      )}
+      <TouchableOpacity style={styles.addButton} onPress={addGoal}>
+        <Text style={styles.addButtonText}>+ Add Goal</Text>
+      </TouchableOpacity>
     </View>
       
   );

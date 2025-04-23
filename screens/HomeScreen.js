@@ -57,6 +57,9 @@ export default function HomeScreen() {
       <TouchableOpacity style={styles.button} onPress={() => router.push('/food')}>
         <Text style={styles.buttonText}>Food</Text>
       </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={() => router.push('/photogall')}>
+        <Text style={styles.buttonText}>Photo Gallery</Text>
+      </TouchableOpacity>
 
       {/*
       <FlatList
