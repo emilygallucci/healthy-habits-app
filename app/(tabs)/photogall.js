@@ -7,9 +7,8 @@ import { storage } from '../../firebase';
 import { getAuth } from 'firebase/auth';
 
 export default function PhotoScreen() {
-  /*const { title } = useLocalSearchParams();
-  const steps = habitDetails[title] || ['No steps found for this habit']; */
   const [images, setImages] = useState([]);
+  const [localImage, setLocalImage] = useState(null);
   const user = getAuth().currentUser;
 
   useEffect(() => {
@@ -32,6 +31,9 @@ export default function PhotoScreen() {
     });
 
     if (!result.canceled) {
+      const uri = result.assets[0].uri;
+      setLocalImage(uri);
+
       const response = await fetch(result.assets[0].uri);
       const blob = await response.blob();
 
@@ -44,13 +46,12 @@ export default function PhotoScreen() {
 
   return (
     <View style={styles.container}>
-      {/*<Text style={styles.title}>{title}</Text>
-      <Text style={styles.subtitle}>Steps to get started:</Text>
-      {steps.map((step, index) => (
-        <Text key={index}>✅ {step}</Text>
-      ))} */}
+      {}
       <Text style={styles.title}>My Photo Gallery</Text>
       <Button title="Add Photo" onPress={uploadImage} />
+      {localImage && (
+      <Image source={{ uri: localImage }} style={styles.image} />
+    )}
       <FlatList
         data={images}
         numColumns={2}
@@ -68,4 +69,9 @@ const styles = StyleSheet.create({
   container: { flex: 1, padding: 20, backgroundColor: '#fff' },
   title: { fontSize: 26, fontWeight: 'bold', marginBottom: 10 },
   subtitle: { fontSize: 18, marginBottom: 10 },
+  image: {
+    width: '48%',
+    height: 180,
+    borderRadius: 10,
+  }
 });
