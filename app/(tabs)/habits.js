@@ -1,73 +1,103 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Button, Image, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, ScrollView, StyleSheet, Button, Image, FlatList, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 import { useLocalSearchParams } from 'expo-router';
 import { storage } from '../../firebase';
 import { getAuth } from 'firebase/auth';
 
-
-
-const habitDetails = {
-    'Drink More Water': [
-      'Start your day with a glass of water',
-      'Carry a reusable water bottle',
-      'Track your daily water intake',
-    ],
-    'Eat More Veggies': [
-      'Add veggies to every meal',
-      'Try a new vegetable each week',
-      'Snack on baby carrots or cucumber',
-    ],
-    'Exercise Daily': [
-      'Do a 15-minute workout in the morning',
-      'Take a walk after meals',
-      'Stretch before bed',
-    ],
-    'Sleep Earlier': [
-      'Set a consistent bedtime',
-      'Avoid screens 1 hour before sleep',
-      'Create a calming nighttime routine',
-    ],
-  }; 
+const initialHabits = {
+  'Drink More Water': [
+    { text: 'Start your day with a glass of water', done: false },
+    { text: 'Carry a reusable water bottle', done: false },
+    { text: 'Track your daily water intake', done: false },
+  ],
+  'Eat More Veggies': [
+    { text: 'Add veggies to every meal', done: false },
+    { text: 'Try a new vegetable each week', done: false },
+    { text: 'Snack on baby carrots or cucumber', done: false },
+  ],
+  'Exercise Daily': [
+    { text: 'Do a 15-minute workout in the morning', done: false },
+    { text: 'Take a walk after meals', done: false },
+    { text: 'Stretch before bedtime', done: false },
+  ],
+};
 
 export default function HabitScreen() {
-  const { title } = useLocalSearchParams();
-  const steps = habitDetails[title] || ['No steps found for this habit']; 
-  const [goals, setGoals] = useState([]);
+  const [habits, setHabits] = useState(initialHabits);
+  const [selectedHabit, setSelectedHabit] = useState(null);
+  const [newHabit, setNewHabit] = useState('');
+  const [newSteps, setNewSteps] = useState('');
 
-  const addGoal = () => {
-    // For now, we'll just add a dummy goal. You can connect this to a selection screen later.
-    const newGoal = {
-      id: Date.now().toString(),
-      title: `Goal ${goals.length + 1}`,
-    };
-    setGoals([...goals, newGoal]);
+  const toggleStepCompletion = (habitName, stepIndex) => {
+    const updatedHabit = habits[habitName].map((step, index) =>
+      index === stepIndex ? { ...step, done: !step.done } : step
+    );
+    setHabits({ ...habits, [habitName]: updatedHabit });
   };
 
+  const addHabit = () => {
+    if (newHabit && newSteps) {
+      const stepsArray = newSteps
+        .split(',')
+        .map(step => ({ text: step.trim(), done: false }));
+      setHabits({ ...habits, [newHabit]: stepsArray });
+      setNewHabit('');
+      setNewSteps('');
+    }
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>My Goals</Text>
-      <Text style={styles.subtitle}>Steps to get started:</Text>
-      {goals.length === 0 ? (
-        <Text style={styles.noGoals}>No goals picked yet.</Text>
-      ) : (
-        <FlatList
-          data={goals}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <View style={styles.goalCard}>
-              <Text style={styles.goalText}>{item.title}</Text>
-            </View>
-          )}
-        />
+    <ScrollView style={styles.container}>
+      <Text style={styles.title}>Select a Habit</Text>
+      {Object.keys(habits).map(habit => (
+        <TouchableOpacity
+          key={habit}
+          onPress={() => setSelectedHabit(habit)}
+          style={styles.habitButton}
+        >
+          <Text style={styles.habitText}>{habit}</Text>
+        </TouchableOpacity>
+      ))}
+
+      {selectedHabit && (
+        <View style={styles.stepsContainer}>
+          <Text style={styles.stepsTitle}>Steps for "{selectedHabit}":</Text>
+          {habits[selectedHabit].map((step, index) => (
+            <TouchableOpacity
+              key={index}
+              onPress={() => toggleStepCompletion(selectedHabit, index)}
+              style={[
+                styles.stepItem,
+                step.done && styles.completedStepItem,
+              ]}
+            >
+              <Text style={[styles.step, step.done && styles.completedStep]}>
+                {step.done ? '✅' : '⬜'} {step.text}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
       )}
-      <TouchableOpacity style={styles.addButton} onPress={addGoal}>
-        <Text style={styles.addButtonText}>+ Add Goal</Text>
-      </TouchableOpacity>
-    </View>
-      
+
+      <View style={styles.inputSection}>
+        <Text style={styles.title}>Add Your Own Habit</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Habit name"
+          value={newHabit}
+          onChangeText={setNewHabit}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Steps (comma separated)"
+          value={newSteps}
+          onChangeText={setNewSteps}
+        />
+        <Button title="Add Habit" onPress={addHabit} />
+      </View>
+    </ScrollView>
   );
 }
 
