@@ -49,7 +49,7 @@ export default function PhotoScreen() {
       {steps.map((step, index) => (
         <Text key={index}>✅ {step}</Text>
       ))} */}
-      <Text style={styles.title}>My Goal Gallery</Text>
+      <Text style={styles.title}>My Photo Gallery</Text>
       <Button title="Add Photo" onPress={uploadImage} />
       <FlatList
         data={images}

@@ -1,38 +1,36 @@
 import React from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet } from 'react-native';
+import { StyleSheet, Text, View, FlatList, Button, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
+import { NavigationContainer, NavigationIndependentTree } from '@react-navigation/native';
 
-const recipes = [
-  { id: '1', title: 'Grilled Chicken Salad' },
-  { id: '2', title: 'Veggie Stir Fry' },
-  { id: '3', title: 'Oatmeal with Berries' },
-];
 
-export default function FoodList() {
-  const router = useRouter();
-
+export default function FoodList({ navigation }) {
+    
+  const recipes = [
+    { id: "1", recipeName: "Grilled Chicken Salad" },
+    { id: "2", recipeName: "Veggie Stir Fry" },
+    { id: "3", recipeName: "Oatmeal with Berries" },
+  ];
+  
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Choose a Recipe</Text>
-      <FlatList
-        data={recipes}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.card}
-            onPress={() => router.push(`/food/${item.id}`)}
-          >
-            <Text style={styles.cardText}>{item.title}</Text>
-          </TouchableOpacity>
-        )}
-      />
-    </View>
-  );
+  <View style={{paddingTop: 0}}>
+  <FlatList
+    data={recipes}
+    renderItem={({item}) => <View style={{borderColor:'silver', borderBottomWidth: 4}}>
+      <TouchableOpacity onPress={()=>{navigation.navigate("Recipe",{recipeName: item.recipeName})}}>
+          <Text style={styles.recipename}>{item.recipeName}</Text>
+          <Text style={styles.recipedescription}>{item.recipeDescription}</Text>
+      </TouchableOpacity>
+    </View>}
+  /> 
+</View>
+ 
+);
 }
 
 const styles = StyleSheet.create({
   container: { padding: 20 },
-  title: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
+  recipename: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
   card: {
     backgroundColor: '#eee',
     padding: 16,
