@@ -1,8 +1,9 @@
 import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 
 export default function RecipeDetail({ route, navigation }) {
 
-    const { recipeName } = route.params;
+    const { recipeName } = useLocalSearchParams();
     
     const recipeData = {
       "Grilled Chicken Salad": {
@@ -25,51 +26,46 @@ export default function RecipeDetail({ route, navigation }) {
 
       "Veggie Stir Fry":{
         image:
-          "https://healthyfitnessmeals.com/wp-content/uploads/2018/01/mango-black-bean-salad-3.jpg",
+          "https://cdn.loveandlemons.com/wp-content/uploads/2025/02/stir-fry.jpg",
         ingredients: [
-          "Red bell pepper",
-          "Red onion",
-          "Jalapeno",
-          "Canned Black beans",
-          "Mangoes",
-          "Corn kernels",
-          "Chopped cilantro leaves",
-          "Olive oil",
-          "Lime juice",
-          "Salt and pepper to taste",
-          "Ground cumin",
-          "Chili powder",
+          "1 red bell pepper, stemmed, seeded, and sliced",
+          "8 ounces cremini mushrooms, stemmed and sliced",
+          "3 cups small broccoli florets",
+          "1 cup sugar snap peas",
+          "1 cup thinly sliced carrots",
+          "3 green onions, thinly sliced",
+          "2 tablespoons extra-virgin olive oil",
+          "1 yellow bell pepper, stemmed, seeded, and sliced",
         ],
         directions: [
-          "In a bowl add all of the chopped veggies, beans, and chopped mangoes in a bowl.",
-          "Add the seasonings over the chopped veggies. You may also mix the seasonings in a small bowl with olive oil and lime juice and pour over the salad.",
-          "Add the olive oil and lime over the salad.",
-          "Mix well to combine and serve.",
+          "Heat the olive oil in a large skillet or wok over high heat.",
+          "Add the red and yellow peppers, mushrooms, broccoli, snap peas, and carrots and toss.",
+          "Cook, stirring occasionally, for 3 to 4 minutes, or until the vegetables soften slightly.",
+          "Season with sauces and cook for 1-2 minutes more.",
         ],
       },
 
       "Oatmeal with Berries":{
         image:
-          "https://madaboutfood.co/wp-content/uploads/2020/10/Sweet-Potato-Mushroom-and-Wild-Rice-Soup-10-1536x2048.jpg",
+          "https://d2t88cihvgacbj.cloudfront.net/manage/wp-content/uploads/2016/02/Triple-Berry-Oatmeal-Breakfast-Bowl-2.jpg?x29814",
         ingredients: [
-          "1 leak",
-          "6 cloves garlic",
-          "2 cups shitake musrooms",
-          "4 cups vegetable broth",
-          "2 cups water",
-          "1 1/2 cups lentils",
-          "1 sweet potato",
+          "1 cup old fashioned oats",
+          "1 cup whole milk",
+          "1 cup frozen berries",
+          "1/4 teaspoon cinnamon",
+          "1/4 teaspoon vanilla extract",
+          "1 tablespoon maple syrup (add more for a sweeter oatmeal)",
+          "pinch of salt",
           "1 bay leaf",
           "1/2 cup basil",
           "dash Black pepper",
           "handful spinach",
         ],
         directions: [
-          "In a large pan, stir-fry leek, mushrooms and garlic for 3 to 4 minutes until leeks are soft.",
-          "Stir in broth, water, lentils, sweet potato, and bay leaf.",
-          "Bring to boil then simmer uncovered until lentils and sweet potatoes are soft, about 30 to 40 minutes.",
-          "Remove bay leaf and puree 2 cups of soup until smooth or use an immersion blender; return to pot, stir in basil and pepper to taste.",
-          "Just before serving stir in as much as you dare fresh spinach. It will melt in the pot. If you prefer fill individual soup bowls with spinach and spoon hot soup over the spinach. Top with a sprinkle of more fresh basil.",
+          "In a small pot, stir oats, milk, berries, cinnamon, vanilla extract, maple syrup, and salt over medium high heat.",
+          "When the mixture starts to bubble, crush the berries with the back of the spoon and turn the heat to medium low and cover.",
+          "Cook for 3-5 more minutes or until oats are tender to your preference, stirring occasionally.",
+          "Pour oatmeal in a bowl, and top with vanilla yogurt, nuts, and additional berries if desired. Serve warm or at room temperature.",
         ],
       },
     };
@@ -86,17 +82,15 @@ export default function RecipeDetail({ route, navigation }) {
 
   return (
     <ScrollView style={styles.container}>
-      {selectedRecipe.image ? (
+      {selectedRecipe.image && (
         <Image source={{ uri: selectedRecipe.image }} style={styles.image} />
-      ) : null}
+      )}
       <View style={styles.textContainer}>
         <Text style={styles.title}>{recipeName}</Text>
 
         <Text style={styles.sectionTitle}>Ingredients:</Text>
         {selectedRecipe.ingredients.map((ingredient, index) => (
-          <Text key={index} style={styles.text}>
-            • {ingredient}
-          </Text>
+          <Text key={index} style={styles.text}>• {ingredient}</Text>
         ))}
 
         <Text style={styles.sectionTitle}>Directions:</Text>

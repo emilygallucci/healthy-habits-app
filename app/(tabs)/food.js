@@ -1,10 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View, FlatList, Button, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-import { NavigationContainer, NavigationIndependentTree } from '@react-navigation/native';
+import { useNavigation, NavigationContainer, NavigationIndependentTree } from '@react-navigation/native';
 
 
 export default function FoodList({ navigation }) {
+  const router = useRouter();
     
   const recipes = [
     { id: "1", recipeName: "Grilled Chicken Salad" },
@@ -13,19 +14,28 @@ export default function FoodList({ navigation }) {
   ];
   
   return (
-  <View style={{paddingTop: 0}}>
-  <FlatList
-    data={recipes}
-    renderItem={({item}) => <View style={{borderColor:'silver', borderBottomWidth: 4}}>
-      <TouchableOpacity onPress={()=>{navigation.navigate("Recipe",{recipeName: item.recipeName})}}>
-          <Text style={styles.recipename}>{item.recipeName}</Text>
-          <Text style={styles.recipedescription}>{item.recipeDescription}</Text>
-      </TouchableOpacity>
-    </View>}
-  /> 
-</View>
- 
-);
+    <View style={{ paddingTop: 0 }}>
+      <FlatList
+        data={recipes}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View style={{ borderColor: 'silver', borderBottomWidth: 4 }}>
+            <TouchableOpacity
+              onPress={() => {
+                router.push({
+                  pathname: '/fooddetail',
+                  params: { recipeName: item.recipeName },
+                });
+              }}
+            >
+              <Text style={styles.recipename}>{item.recipeName}</Text>
+              <Text style={styles.recipedescription}>Tap to view recipe</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
