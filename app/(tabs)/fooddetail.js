@@ -1,8 +1,12 @@
+import React from 'react';
 import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
+import { useRouter } from 'expo-router';
 
-export default function RecipeDetail({ route, navigation }) {
 
+export default function RecipeDetail() {
+
+    const router = useRouter();
     const { recipeName } = useLocalSearchParams();
     
     const recipeData = {
@@ -81,7 +85,7 @@ export default function RecipeDetail({ route, navigation }) {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
       {selectedRecipe.image && (
         <Image source={{ uri: selectedRecipe.image }} style={styles.image} />
       )}

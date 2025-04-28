@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import { useNavigation, NavigationContainer, NavigationIndependentTree } from '@react-navigation/native';
 
 
-export default function FoodList({ navigation }) {
+export default function FoodList() {
   const router = useRouter();
     
   const recipes = [
@@ -14,15 +14,15 @@ export default function FoodList({ navigation }) {
   ];
   
   return (
-    <View style={{ paddingTop: 0 }}>
+    <View style={styles.container}>
       <FlatList
         data={recipes}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <View style={{ borderColor: 'silver', borderBottomWidth: 4 }}>
+          <View style={styles.card}>
             <TouchableOpacity
               onPress={() => {
-                router.push({
+                router.navigate({
                   pathname: '/fooddetail',
                   params: { recipeName: item.recipeName },
                 });
@@ -39,7 +39,7 @@ export default function FoodList({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20 },
+  container: { flex: 1, padding: 20, backgroundColor: '#fff' },
   recipename: { fontSize: 24, fontWeight: 'bold', marginBottom: 20 },
   card: {
     backgroundColor: '#eee',

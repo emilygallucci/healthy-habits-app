@@ -16,14 +16,18 @@ export default function PhotoScreen() {
   }, []);
 
   const fetchImages = async () => {
-    if (!user) return;
-    const listRef = ref(storage, `gallery/${user.uid}/`);
-    const result = await listAll(listRef);
-    const urls = await Promise.all(result.items.map((item) => getDownloadURL(item)));
-    setImages(urls);
+    if (!user) {
+      console.log('User not logged in');
+      return;
+    }
   };
 
   const uploadImage = async () => {
+    if (!user) {
+      console.log('User not logged in');
+      return;
+    }
+
     const result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -32,16 +36,27 @@ export default function PhotoScreen() {
 
     if (!result.canceled) {
       const uri = result.assets[0].uri;
-      setLocalImage(uri);
+      //setLocalImage(uri);
 
-      const response = await fetch(result.assets[0].uri);
+      const response = await fetch(uri);
       const blob = await response.blob();
 
-      const filename = `gallery/${user.uid}/${Date.now()}.jpg`;
-      const imageRef = ref(storage, filename);
-      await uploadBytes(imageRef, blob);
-      fetchImages();
+      const filename = uri.substring(uri.lastIndexOf('/') + 1);
+      const imageRef = ref(storage, `gallery/${user.uid}/${filename}`);
+      
+      //await uploadBytes(imageRef, blob);
+      //fetchImages();
+      try {
+        await uploadBytes(imageRef, blob);
+        console.log('Image uploaded successfully!');
+        fetchImages(); // Refresh images after upload
+      } catch (error) {
+        console.error('Upload failed:', error);
+      }
+    } else {
+      console.log('Image selection canceled');
     }
+    
   };
 
   return (

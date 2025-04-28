@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, ScrollView, StyleSheet, Button, Image, FlatList, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 import * as ImagePicker from 'expo-image-picker';
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 import { useLocalSearchParams } from 'expo-router';
 import { storage } from '../../firebase';
 import { getAuth } from 'firebase/auth';
+
 
 const initialHabits = {
   'Drink More Water': [
@@ -50,6 +52,9 @@ export default function HabitScreen() {
 
   return (
     <ScrollView style={styles.container}>
+      <TouchableOpacity onPress={() => router.replace('/')}>
+        <Text style={styles.backButton}>← Back to Home</Text>
+      </TouchableOpacity>
       <Text style={styles.title}>Select a Habit</Text>
       {Object.keys(habits).map(habit => (
         <TouchableOpacity

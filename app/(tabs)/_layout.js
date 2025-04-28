@@ -12,19 +12,7 @@ import PhotoScreen from './photogall';
 const Stack = createNativeStackNavigator();
 
 export default function Layout() {
-  return (
-    <>
-      <Tabs />
-      <NavigationIndependentTree>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen name="Home" component={FoodList} />
-            <Stack.Screen name="Recipe" component={RecipeDetail} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </NavigationIndependentTree>
-    </>
-  );
+  return <Tabs />;
 }
 
 
