@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useRouter } from 'expo-router';
 
@@ -85,7 +85,11 @@ export default function RecipeDetail() {
   }
 
   return (
+    
     <ScrollView style={styles.container} contentContainerStyle={{ flexGrow: 1 }}>
+      <TouchableOpacity onPress={() => router.replace('/food')}>
+              <Text style={styles.backButton}>← Back</Text>
+            </TouchableOpacity>
       {selectedRecipe.image && (
         <Image source={{ uri: selectedRecipe.image }} style={styles.image} />
       )}
@@ -112,6 +116,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: '#fff',
   },
   image: {
     width: '100%',
@@ -126,14 +131,17 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
+    color: 'black',
   },
   sectionTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     marginTop: 15,
+    color: 'black',
   },
   text: {
     fontSize: 16,
     marginVertical: 5,
+    color: 'black',
   },
 });

@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getAnalytics } from "firebase/analytics";
 import { getStorage } from 'firebase/storage';
+import { useRouter } from 'expo-router';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 

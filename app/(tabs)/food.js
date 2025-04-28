@@ -15,6 +15,9 @@ export default function FoodList() {
   
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={() => router.replace('/')}>
+              <Text style={styles.backButton}>← Back to Home</Text>
+            </TouchableOpacity>
       <FlatList
         data={recipes}
         keyExtractor={(item) => item.id}

@@ -27,6 +27,7 @@ const initialHabits = {
 };
 
 export default function HabitScreen() {
+  const router = useRouter();
   const [habits, setHabits] = useState(initialHabits);
   const [selectedHabit, setSelectedHabit] = useState(null);
   const [newHabit, setNewHabit] = useState('');
