@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, ScrollView, StyleSheet, Button, Image, FlatList, TouchableOpacity } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { MediaType } from 'expo-image-picker';
 import { getStorage, ref, uploadBytes, getDownloadURL, listAll } from 'firebase/storage';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { storage } from '../../firebase';
@@ -19,6 +20,7 @@ export default function PhotoScreen() {
       console.log('User not logged in');
     }
   }, [user]);
+  //console.log('Current images:', images);
 
   const fetchImages = async () => {
     if (!user) {
@@ -26,21 +28,22 @@ export default function PhotoScreen() {
       return;
     }
   
-
-  const imagesRef = ref(storage, `gallery/${user.uid}`);
   try {
+    const imagesRef = ref(storage, `gallery/${user.uid}`);
     const result = await listAll(imagesRef);
+
     const imageUrls = await Promise.all(
-      result.items.map(async (itemRef) => {
-        const url = await getDownloadURL(itemRef);
-        return url;
-      })
-    );
+      result.items.map((itemRef) => getDownloadURL(itemRef))
+        );
+
     setImages(imageUrls); // Set images to state
   } catch (error) {
     console.error('Failed to fetch images:', error);
   }
+
+  //console.log('Fetched images:', urls);
 };
+
 
   const uploadImage = async () => {
     if (!user) {
@@ -54,7 +57,12 @@ export default function PhotoScreen() {
       quality: 1,
     });
 
-    if (!result.canceled) {
+    if (result.canceled) {
+      console.log('Image selection canceled');
+      return;
+    }
+
+    //if (!result.canceled) {
       const uri = result.assets[0].uri;
       setLocalImage(uri);
 
@@ -64,18 +72,23 @@ export default function PhotoScreen() {
       const filename = uri.substring(uri.lastIndexOf('/') + 1);
       const imageRef = ref(storage, `gallery/${user.uid}/${filename}`);
       
-      //await uploadBytes(imageRef, blob);
+      await uploadBytes(imageRef, blob);
       //fetchImages();
       try {
-        await uploadBytes(imageRef, blob);
+        //await uploadBytes(imageRef, blob);
         console.log('Image uploaded successfully!');
-        fetchImages(); // Refresh images after upload
+
+        const downloadURL = await getDownloadURL(imageRef);
+        console.log('Download URL:', downloadURL);
+
+        setImages((prevImages) => [...prevImages, downloadURL]);
+        //fetchImages(); // Refresh images after upload
       } catch (error) {
         console.error('Upload failed:', error);
       }
-    } else {
-      console.log('Image selection canceled');
-    }
+    //} else {
+    //  console.log('Image selection canceled');
+    //}
     
   };
 
@@ -87,7 +100,7 @@ export default function PhotoScreen() {
       
       <Text style={styles.title}>My Photo Gallery</Text>
       <Button title="Add Photo" onPress={uploadImage} />
-      {localImage && <Image source={{ uri: localImage }} style={styles.image} /> }
+      {localImage && <Image source={{ uri: localImage }} style={styles.image} /> } 
     
       <FlatList
         data={images}
