@@ -108,7 +108,111 @@ export default function HabitScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 20, backgroundColor: '#fff' },
-  title: { fontSize: 26, fontWeight: 'bold', marginBottom: 10 },
-  subtitle: { fontSize: 18, marginBottom: 10 },
+  container: { 
+    flex: 1, 
+    padding: 20, 
+    backgroundColor: '#fff', // clean white background
+  },
+
+  title: { 
+    fontSize: 26, 
+    fontWeight: 'bold', 
+    marginBottom: 20, 
+    textAlign: 'center',
+    color: '#333', // neutral dark gray
+  },
+
+  habitButton: {
+    backgroundColor: '#f2f2f2', // soft gray for habit buttons
+    paddingVertical: 14,
+    paddingHorizontal: 18,
+    borderRadius: 12,
+    marginBottom: 12,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd',
+  },
+
+  habitText: {
+    fontSize: 20,
+    color: '#333', // neutral text
+    fontWeight: '600',
+  },
+
+  stepsContainer: {
+    marginTop: 30,
+    backgroundColor: '#fafafa', // subtle light gray background
+    padding: 18,
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+
+  stepsTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    color: '#333',
+    textAlign: 'center',
+  },
+
+  stepItem: {
+    padding: 12,
+    marginVertical: 6,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 10,
+  },
+
+  completedStepItem: {
+    backgroundColor: '#e6f4ea', // very soft green for completed
+  },
+
+  step: {
+    fontSize: 18,
+    color: '#555',
+  },
+
+  completedStep: {
+    textDecorationLine: 'line-through',
+    color: '#2e7d32', // dark green for completed
+  },
+
+  inputSection: {
+    marginTop: 40,
+    padding: 18,
+    backgroundColor: '#fafafa',
+    borderRadius: 15,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 15,
+    fontSize: 16,
+    backgroundColor: '#fff',
+  },
+
+  addButton: {
+    backgroundColor: '#ffc0cb', // soft pink just for this button
+    paddingVertical: 14,
+    borderRadius: 10,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+
+  addButtonText: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
 });
