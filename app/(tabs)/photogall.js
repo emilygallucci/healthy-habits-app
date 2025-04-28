@@ -12,15 +12,34 @@ export default function PhotoScreen() {
   const user = getAuth().currentUser;
 
   useEffect(() => {
-    fetchImages();
-  }, []);
+    if (user) {
+      fetchImages();
+    } else {
+      console.log('User not logged in');
+    }
+  }, [user]);
 
   const fetchImages = async () => {
     if (!user) {
       console.log('User not logged in');
       return;
     }
-  };
+  
+
+  const imagesRef = ref(storage, `gallery/${user.uid}`);
+  try {
+    const result = await listAll(imagesRef);
+    const imageUrls = await Promise.all(
+      result.items.map(async (itemRef) => {
+        const url = await getDownloadURL(itemRef);
+        return url;
+      })
+    );
+    setImages(imageUrls); // Set images to state
+  } catch (error) {
+    console.error('Failed to fetch images:', error);
+  }
+};
 
   const uploadImage = async () => {
     if (!user) {
@@ -36,7 +55,7 @@ export default function PhotoScreen() {
 
     if (!result.canceled) {
       const uri = result.assets[0].uri;
-      //setLocalImage(uri);
+      setLocalImage(uri);
 
       const response = await fetch(uri);
       const blob = await response.blob();
@@ -61,12 +80,11 @@ export default function PhotoScreen() {
 
   return (
     <View style={styles.container}>
-      {}
+      
       <Text style={styles.title}>My Photo Gallery</Text>
       <Button title="Add Photo" onPress={uploadImage} />
-      {localImage && (
-      <Image source={{ uri: localImage }} style={styles.image} />
-    )}
+      {localImage && <Image source={{ uri: localImage }} style={styles.image} /> }
+    
       <FlatList
         data={images}
         numColumns={2}
